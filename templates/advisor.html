@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}AI Advisor – FinAI{% endblock %}
+{% block page_title %}🤖 AI Financial Advisor{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Fixed chat footer */
+  #chatFooter {
+    position: fixed;
+    bottom: 0;
+    left: var(--sidebar-w);
+    right: 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg-card);
+    padding: 14px 28px;
+    z-index: 80;
+  }
+
+  /* Prevent chat from being hidden behind footer */
+  #chatWindow {
+    padding-bottom: 180px;
+  }
+
+  /* Mobile layout */
+  @media (max-width: 768px) {
+    #chatFooter {
+      left: 0;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Chat Area -->
+<div id="chatWindow" style="display:flex;flex-direction:column;gap:16px;padding:8px 4px;">
+  <div class="chat-bubble bot">
+    👋 Hello! I'm <strong>FinBot</strong>, your AI financial assistant.<br><br>
+    Ask me anything about expenses, savings, investments, or your financial situation! 💰
+  </div>
+</div>
+
+<!-- Input Area -->
+<div id="chatFooter">
+
+  <!-- Quick Question Chips -->
+  <div id="chipRow" class="chip-row" style="margin-bottom:10px;">
+    <span class="chip" onclick="sendChip(this)">What did I buy yesterday?</span>
+    <span class="chip" onclick="sendChip(this)">Total expenses this month?</span>
+    <span class="chip" onclick="sendChip(this)">How is my financial condition?</span>
+    <span class="chip" onclick="sendChip(this)">How much have I saved toward my goal?</span>
+    <span class="chip" onclick="sendChip(this)">Money-saving tips for this month</span>
+  </div>
+  <!-- Chat Input -->
+  <div style="display:flex;gap:10px;align-items:center;">
+    <input type="text" class="form-control" id="chatInput"
+           placeholder="Tanya apa saja tentang keuanganmu..."
+           onkeypress="if(event.key==='Enter') sendMessage()">
+    <button class="btn btn-primary" onclick="sendMessage()" style="white-space:nowrap;">Send ➤</button>
+    <button class="btn btn-secondary btn-sm" onclick="clearChat()" title="Clear Chat">🗑</button>
+  </div>
+</div>
+
+{% endblock %}
+{% block extra_scripts %}
+<!-- Advisor Logic -->
+<script src="{{ url_for('static', filename='js/advisor.js') }}"></script>
+{% endblock %}

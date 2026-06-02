@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Savings & Investment – FinAI{% endblock %}
+{% block page_title %}🎯 Savings & Investment{% endblock %}
+
+{% block content %}
+
+<!-- Navigation Tabs -->
+<div style="display:flex;gap:10px;margin-bottom:20px;">
+  <button class="btn btn-primary"   id="tabSavings"    onclick="switchTab('savings')">🎯 Savings Plan</button>
+  <button class="btn btn-secondary" id="tabGoals"      onclick="switchTab('goals')">📋 My Goals</button>
+  <button class="btn btn-secondary" id="tabInvestment" onclick="switchTab('investment')">📈 Investment Guide</button>
+</div>
+
+<!-- Savings Plan -->
+<div id="panelSavings">
+  <div class="grid-2">
+
+    <!-- Plan Form -->
+    <div class="card">
+      <div class="card-title">🎯 Create Savings Plan</div>
+      <div class="form-group">
+        <label class="form-label">Goal Name</label>
+        <input type="text" class="form-control" id="goalName" placeholder="House Down Payment, Vacation, etc.">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Target Amount (Rp)</label>
+          <input type="number" class="form-control" id="targetAmount" placeholder="50000000" min="0">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Current Savings (Rp)</label>
+          <input type="number" class="form-control" id="currentSavings" placeholder="0" min="0">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Timeline (Months)</label>
+          <input type="number" class="form-control" id="timelineMonths" placeholder="12" min="1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Monthly Income (Rp)</label>
+          <input type="number" class="form-control" id="monthlyIncome" placeholder="5000000" min="0">
+        </div>
+      </div>
+
+      <button class="btn btn-amber btn-block" onclick="savePlan()">💾 Save Plan</button>
+    </div>
+
+    <!-- Plan Summary -->
+    <div class="card">
+      <div class="card-title">📊 Summary</div>
+
+      <div id="planSummary">
+        <div class="empty-state"><div class="empty-icon">🎯</div>
+          <p>Fill in the form and click Save Plan.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Goals List -->
+<div id="panelGoals" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div class="section-title" style="margin:0;">📋 My Goals</div>
+    <button class="btn btn-secondary btn-sm" onclick="loadGoals()">🔄 Refresh</button>
+  </div>
+
+  <div id="goalsList">
+    <div class="empty-state"><div class="empty-icon">📋</div>
+      <p>No goals yet. Create one in the Savings Plan tab.</p></div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+       z-index:999;align-items:center;justify-content:center;">
+
+    <div style="background:var(--bg-card);border:1px solid var(--border);
+                border-radius:var(--radius);padding:24px;width:90%;max-width:420px;">
+
+      <div class="card-title">✏️ Edit Goal</div>
+      <input type="hidden" id="editId">
+      <div class="form-group">
+        <label class="form-label">Goal Name</label>
+        <input type="text" class="form-control" id="editName">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Target Amount (Rp)</label>
+          <input type="number" class="form-control" id="editTarget">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Timeline (Months)</label>
+          <input type="number" class="form-control" id="editMonths">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <button class="btn btn-primary" style="flex:1" onclick="submitEdit()">Save</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Investment Guide -->
+<div id="panelInvestment" style="display:none;">
+  <div class="grid-2">
+
+    <div>
+      <!-- Investment Form -->
+      <div class="card">
+        <div class="card-title">📈 Investment Details</div>
+
+        <div class="form-group">
+          <label class="form-label">Available Funds (Rp)</label>
+          <input type="number" class="form-control" id="investAmount" placeholder="10000000" min="0">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Investment Horizon</label>
+
+          <select class="form-control" id="investHorizon">
+            <option>Less than 1 year</option>
+            <option>1–3 years</option>
+            <option selected>3–5 years</option>
+            <option>More than 5 years</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Risk Tolerance</label>
+
+          <div class="risk-group">
+            <button class="risk-btn selected-low" id="riskLow2" onclick="selectRisk2('Low')">🟢 Low</button>
+            <button class="risk-btn" id="riskMedium2" onclick="selectRisk2('Medium')">🟡 Medium</button>
+            <button class="risk-btn" id="riskHigh2" onclick="selectRisk2('High')">🔴 High</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="getInvestmentGuidance()">
+          📈 Get Investment Guidance
+        </button>
+      </div>
+
+      <!-- Investment Types -->
+      <div class="card">
+        <div class="card-title">💡 Indonesian Investment Instruments</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:.85rem;">
+          <div style="background:var(--bg-input);border-radius:8px;padding:10px;">
+            <span style="font-weight:700;color:var(--teal);">🟢 Low Risk</span><br>
+            <span class="text-sub">Time Deposits, Money Market Mutual Funds, ORI, SBR</span>
+          </div>
+
+          <div style="background:var(--bg-input);border-radius:8px;padding:10px;">
+            <span style="font-weight:700;color:var(--amber);">🟡 Medium Risk</span><br>
+            <span class="text-sub">Balanced Mutual Funds, Fixed Income Mutual Funds</span>
+          </div>
+
+          <div style="background:var(--bg-input);border-radius:8px;padding:10px;">
+            <span style="font-weight:700;color:var(--pink);">🔴 High Risk</span><br>
+            <span class="text-sub">Equity Mutual Funds, ETFs, Stocks, P2P Lending</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Recommendation -->
+    <div class="card">
+      <div class="card-title">📊 AI Investment Guidance</div>
+      <div id="investmentBox">
+        <div class="empty-state"><div class="empty-icon">📈</div>
+          <p>Fill in the form and click Get Guidance.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+<!-- Savings Logic -->
+<script src="{{ url_for('static', filename='js/savings.js') }}"></script>
+
+{% endblock %}

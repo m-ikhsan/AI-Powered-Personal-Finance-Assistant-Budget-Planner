@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}Budget Planner – FinAI{% endblock %}
+{% block page_title %}📊 Budget Planner{% endblock %}
+
+{% block content %}
+
+<!-- Monthly Income -->
+<div class="card" id="incomeCard">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div class="card-title" style="margin:0;">💵 Monthly Income</div>
+
+    <div id="incomeSavedBadge" class="hidden"
+         style="background:rgba(67,217,173,.15);border:1px solid var(--teal);
+                color:var(--teal);border-radius:99px;padding:4px 14px;font-size:.78rem;font-weight:600;">
+      ✓ Saved
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+
+    <!-- Income Input -->
+    <div class="form-group" style="flex:1;min-width:200px;margin:0;">
+      <label class="form-label">Net Salary / Monthly Income (Rp)</label>
+      <input type="number" class="form-control" id="incomeInput"
+             placeholder="Example: 5000000" min="0">
+    </div>
+    <button class="btn btn-teal" style="margin-bottom:0;" onclick="saveIncome()">
+      💾 Save Income
+    </button>
+  </div>
+
+  <div id="incomeSavedInfo" class="hidden" style="margin-top:12px;padding:10px 14px;
+       background:var(--bg-input);border-radius:8px;font-size:.85rem;color:var(--text-sub);">
+  </div>
+</div>
+
+<!-- Budget Access Guard -->
+<div id="noIncomeGuard" class="card hidden"
+     style="text-align:center;padding:32px;border:2px dashed var(--border);">
+  <div style="font-size:2rem;margin-bottom:10px;">🔒</div>
+  <div style="font-weight:700;font-size:1rem;margin-bottom:6px;">Income Not Set</div>
+
+  <p style="color:var(--text-muted);font-size:.88rem;margin-bottom:16px;">
+    Enter and save your monthly income above<br>before using the Budget Planner.
+  </p>
+
+  <button class="btn btn-primary" onclick="focusIncomeInput()">
+    ↑ Set Income Now
+  </button>
+</div>
+
+<!-- Budget Planner -->
+<div id="budgetPlannerSection" class="hidden">
+
+  <!-- Active Income -->
+  <div id="activeIncomeBar"
+       style="background:linear-gradient(135deg,rgba(108,99,255,.12),rgba(67,217,173,.08));
+              border:1px solid var(--border-glow);border-radius:var(--radius);
+              padding:14px 20px;margin-bottom:20px;
+              display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+
+    <div>
+      <span style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;">Active Income</span>
+
+      <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;color:var(--teal);"
+           id="activeIncomeDisplay">–</div>
+    </div>
+    <div style="font-size:.78rem;color:var(--text-muted);"id="incomeTimestamp"></div>
+  </div>
+
+  <div class="grid-2">
+
+    <!-- Budget Form -->
+    <div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div class="card-title" style="margin:0;">🧾 Budget Allocation</div>
+
+          <!-- Row Controls -->
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" onclick="addBudgetRow()">+ Row</button>
+            <button class="btn btn-secondary btn-sm" onclick="removeBudgetRow()">− Row</button>
+          </div>
+        </div>
+
+        <div id="budgetFields">
+          <!-- Initial Row -->
+          <div class="budget-row" style="display:flex;gap:10px;margin-bottom:10px;align-items:center;">
+            <select class="form-control bgt-category" style="flex:1.2;">
+              <option>Food & Drinks</option>
+              <option>Transportation</option>
+              <option>Housing</option>
+              <option>Bills & Utilities</option>
+              <option>Healthcare</option>
+              <option>Entertainment</option>
+              <option>Clothing</option>
+              <option>Education</option>
+              <option>Savings / Investment</option>
+              <option>Other</option>
+            </select>
+
+            <input type="number" class="form-control bgt-amount" placeholder="Rp 0" min="0"
+                   style="flex:1;" oninput="updateBudgetSummary()">
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Budget Totals -->
+        <div style="display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px;">
+          <span class="text-sub">Total Allocated</span>
+          <span id="miniTotal" style="font-weight:700;">Rp 0</span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:16px;">
+          <span class="text-sub">Remaining Income</span>
+          <span id="miniSisa" style="font-weight:700;color:var(--teal);">–</span>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-primary" style="flex:1;" onclick="saveBudget()">
+            💾 Save Budget
+          </button>
+
+          <button class="btn btn-secondary btn-sm" onclick="analyzeWithAI()"
+                  id="aiBtn" title="AI Analysis">
+            🤖 AI Analysis
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Budget Summary -->
+    <div>
+      <div class="card">
+        <div class="card-title">📊 Budget vs Actual Summary</div>
+        <div id="budgetSummaryBox">
+          <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <p>Save your budget to view<br>the summary and spending progress.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- AI Insights -->
+  <div class="card" id="aiCard" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="card-title" style="margin:0;"> 🤖 AI Analysis & Recommendations</div>
+      <button class="btn btn-secondary btn-sm" onclick="closeAiCard()">✕ Close</button>
+    </div>
+    <div id="aiAdviceBox"></div>
+  </div>
+
+</div><!-- End Budget Planner -->
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+<!-- Budget Logic -->
+<script src="{{ url_for('static', filename='js/budget.js') }}"></script>
+
+{% endblock %}

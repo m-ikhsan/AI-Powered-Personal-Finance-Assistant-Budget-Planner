@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}FinAI – Personal Finance Assistant{% endblock %}</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50%' y='50%' text-anchor='middle' dominant-baseline='central' font-size='80'>💰</text></svg>">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">💰</span>
+        <span class="logo-text">FinAI</span>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li>
+        <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/budget" class="nav-link {% if request.path == '/budget' %}active{% endif %}">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Budget Planner</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/expense" class="nav-link {% if request.path == '/expense' %}active{% endif %}">
+          <span class="nav-icon">💳</span>
+          <span class="nav-label">Expense Analyzer</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/advisor" class="nav-link {% if request.path == '/advisor' %}active{% endif %}">
+          <span class="nav-icon">🤖</span>
+          <span class="nav-label">AI Advisor</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/savings" class="nav-link {% if request.path == '/savings' %}active{% endif %}">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-label">Savings & Investments</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/report" class="nav-link {% if request.path == '/report' %}active{% endif %}">
+          <span class="nav-icon">📄</span>
+          <span class="nav-label">Reports</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="ai-badge">
+        <span>⚡</span>
+        <span><strong>© 2026 M. IKHSAN</strong></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+      </div>
+
+      <div class="topbar-right">
+        <div class="date-badge">{{ now }}</div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="content-area">
+      {% block content %}{% endblock %}
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

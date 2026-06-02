@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Report – FinAI{% endblock %}
+{% block page_title %}📄 Financial Report{% endblock %}
+
+{% block content %}
+
+<!-- Report Filters -->
+<div class="card" style="margin-bottom:20px;">
+  <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+    <div class="form-group" style="margin:0;">
+      <label class="form-label">Month</label>
+      <select class="form-control" id="selMonth" style="width:140px;">
+        <option value="1">January</option><option value="2">February</option>
+        <option value="3">March</option><option value="4">April</option>
+        <option value="5">May</option><option value="6">June</option>
+        <option value="7">July</option><option value="8">August</option>
+        <option value="9">September</option><option value="10">October</option>
+        <option value="11">November</option><option value="12">December</option>
+      </select>
+    </div>
+
+    <div class="form-group" style="margin:0;">
+      <label class="form-label">Year</label>
+      <input type="number" class="form-control" id="selYear" style="width:100px;" min="2020" max="2099">
+    </div>
+
+    <button class="btn btn-primary" onclick="loadReport()">🔍 View Report</button>
+    <button class="btn btn-teal" onclick="genAI()">🤖 Generate AI Insights</button>
+    <button class="btn btn-amber" onclick="downloadPDF()" id="btnDownload">⬇️ Download PDF</button>
+  </div>
+</div>
+
+<!-- Summary Stats -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px;">
+  <div class="stat-card accent-purple"><div class="stat-label">Income</div><div class="stat-value" id="rIncome">–</div><div class="stat-icon">💵</div></div>
+  <div class="stat-card accent-pink"><div class="stat-label">Expenses</div><div class="stat-value" id="rExpenses">–</div><div class="stat-icon">💳</div></div>
+  <div class="stat-card accent-amber"><div class="stat-label">Net Balance</div><div class="stat-value" id="rNet">–</div><div class="stat-icon">📈</div></div>
+  <div class="stat-card accent-purple"><div class="stat-label">Health Score</div><div class="stat-value" id="rScore">–</div><div class="stat-icon">💊</div></div>
+</div>
+
+<!-- Charts & Goals -->
+<div class="grid-2">
+
+  <div class="card">
+    <div class="card-title">🥧 Expense Breakdown</div>
+    <div id="expBreakdown"><div class="empty-state"><div class="empty-icon">🥧</div><p>Select a month and click View Report.</p></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 Saving Goals</div>
+    <div id="goalsSection"><div class="empty-state"><div class="empty-icon">🎯</div><p>–</p></div></div>
+  </div>
+</div>
+
+<!-- Budget Performance -->
+<div class="card">
+  <div class="card-title">📊 Budget vs Actual</div>
+
+  <div id="budgetSection"><div class="empty-state"><div class="empty-icon">📊</div><p>–</p></div></div>
+</div>
+
+<!-- AI Insights -->
+<div class="card" id="aiCard" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div class="card-title" style="margin:0;">🤖 AI Financial Insights</div>
+    <span style="font-size:.75rem;color:var(--teal);">✓ Included in PDF</span>
+  </div>
+  <div id="aiBox"></div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+<!-- Report Logic -->
+<script src="{{ url_for('static', filename='js/report.js') }}"></script>
+
+{% endblock %}

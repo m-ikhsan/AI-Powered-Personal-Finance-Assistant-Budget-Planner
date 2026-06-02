@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Expense Analyzer – FinAI{% endblock %}
+{% block page_title %}💳 Expense Analyzer{% endblock %}
+
+{% block content %}
+
+<div class="grid-2">
+
+  <!-- Input -->
+  <div>
+
+    <!-- Manual Entry -->
+    <div class="card">
+      <div class="card-title">➕ Add Expense</div>
+
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-control" id="expDate">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+
+          <select class="form-control" id="expCategory">
+            <option>Food & Drinks</option>
+            <option>Transportation</option>
+            <option>Housing</option>
+            <option>Bills & Utilities</option>
+            <option>Healthcare</option>
+            <option>Entertainment</option>
+            <option>Clothing</option>
+            <option>Education</option>
+            <option>Savings / Investment</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Amount (Rp)</label>
+          <input type="number" class="form-control" id="expAmount" placeholder="0" min="0">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description (Optional)</label>
+        <input type="text" class="form-control" id="expDesc" placeholder="Example: Lunch at a local restaurant">
+      </div>
+      <button class="btn btn-teal btn-block" onclick="addExpense()">+ Add Transaction</button>
+    </div>
+
+    <!-- CSV Import -->
+    <div class="card">
+      <div class="card-title">📂 Upload CSV</div>
+
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('csvFile').click()">
+        <div class="upload-icon">📤</div>
+        <p><strong>Click to select a file</strong> or drag & drop</p>
+        <p style="font-size:.78rem;margin-top:4px;color:var(--text-muted)"> Format: date, category, description, amount</p>
+      </div>
+
+      <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="uploadCSV(this)">
+      <div id="uploadStatus" style="margin-top:10px;"></div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-primary" style="flex:1" onclick="analyzeExpenses()">
+        🤖 AI Analysis
+      </button>
+      <button class="btn btn-pink btn-sm"  onclick="clearAllExpenses()">
+        🗑️ Delete All
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Output -->
+  <div>
+
+    <!-- AI Insights -->
+    <div class="card">
+      <div class="card-title">💡 AI Insights</div>
+
+      <div id="insightBox">
+        <div class="empty-state">
+          <div class="empty-icon">💡</div>
+          <p>Gemini AI insights will appear here.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Transaction List -->
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div class="card-title" style="margin:0;">🧾 Transaction List</div>
+    <span id="expCount" class="text-muted" style="font-size:.82rem;"></span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="expenseTable">
+        <tr><td colspan="5"><div class="empty-state" style="padding:20px 0;"><p>No transactions yet.</p></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+<!-- Expense Logic -->
+<script src="{{ url_for('static', filename='js/expense.js') }}"></script>
+
+{% endblock %}
