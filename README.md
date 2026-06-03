@@ -50,6 +50,7 @@ finance_assistant/
 ├── app.py                      ← Flask server and all API endpoints
 ├── requirements.txt            ← Python dependencies
 ├── .env.example                ← Environment configuration template
+├── .gitignore                  ← Git ignore rules for sensitive and generated files
 ├── sample_expenses.csv         ← Sample CSV data for testing
 │
 ├── templates/
